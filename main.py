@@ -133,10 +133,10 @@ class MainWindow(QMainWindow):
 
     def run_code(self):
         USAGE = "\n\nInstrucciones validas:\n\n* VARIABLE OPERACION\n\n* ETIQUETA:\n\n* IF VARIABLE != 0 GOTO ETIQUETA\n\n* CALL NOMBRE_MACRO\n\n* MACRO NOMBRE_MACRO ... END\n\nVARIABLE = Y, X1, Z1, X2, Z2, ...\nVARIABLE MACRO = T1, W1, T2, W2, ...\nOPERACION = ++, --, ==\nETIQUETA = A1, B1, C1, D1, S1, A2, ...\nETIQUETA MACRO = G1, G2, G3, ..."
-        equal_text = ["MACRO COPIA","IF T2 != 0 GOTO G4","W1 ++","IF W1 != 0 GOTO G5","G4: T2 --","IF T2 != 0 GOTO G4","G5: IF T1 != 0 GOTO G2","W2 ++","IF W1 != 0 GOTO F","G2: T1 --","T2 ++","W3 ++","IF T1 != 0 GOTO G2","G3: W3 --","T1 ++","IF W3 != 0 GOTO G3","END"]
-        suma_text = ["MACRO SUMA","IF T3 != 0 GOTO G1","CALL SALTO G2","G1: T3 --","IF T3 != 0 GOTO G1","G2: CALL COPIA T2 W2","CALL COPIA T1 T3","IF T2 != 0 GOTO G3","CALL SALTO G4","G3: T3 ++","T2 --","IF T2 != 0 GOTO G3","G4: CALL COPIA W2 T2", "END"]
-        goto_text = ["MACRO SALTO", "W1 ++", "IF W1 != 0 GOTO T1", "END"]
-        resta_text = ["MACRO RESTA","CALL COPIA T1 T3","CALL COPIA T2 W1","IF T2 != 0 GOTO G1","CALL SALTO F","G1: W1 --","T3 --","IF W1 != 0 GOTO G1","END"]
+        equal_text = "MACRO COPIA","IF T2 != 0 GOTO G4","W1 ++","IF W1 != 0 GOTO G5","G4: T2 --","IF T2 != 0 GOTO G4","G5: IF T1 != 0 GOTO G2","W2 ++","IF W1 != 0 GOTO F","G2: T1 --","T2 ++","W3 ++","IF T1 != 0 GOTO G2","G3: W3 --","T1 ++","IF W3 != 0 GOTO G3","END"
+        suma_text = "MACRO SUMA","IF T3 != 0 GOTO G1","CALL SALTO G2","G1: T3 --","IF T3 != 0 GOTO G1","G2: CALL COPIA T2 W2","CALL COPIA T1 T3","IF T2 != 0 GOTO G3","CALL SALTO G4","G3: T3 ++","T2 --","IF T2 != 0 GOTO G3","G4: CALL COPIA W2 T2", "END"
+        goto_text = "MACRO SALTO", "W1 ++", "IF W1 != 0 GOTO T1", "END"
+        resta_text = "MACRO RESTA","CALL COPIA T1 T3","CALL COPIA T2 W1","IF T2 != 0 GOTO G1","CALL SALTO F","G1: W1 --","T3 --","IF W1 != 0 GOTO G1","END"
         self.output_code.setPlainText("")
         QApplication.processEvents()
         text = self.code_text.toPlainText().splitlines()
