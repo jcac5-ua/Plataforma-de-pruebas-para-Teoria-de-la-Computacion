@@ -18,9 +18,8 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QSize
 
-import interpreter
-import encoder
-import expander
+
+import core
 
 #pyinstaller --name InterpreteL --windowed --onefile main.py
 
@@ -37,12 +36,6 @@ def error_msg(tipo, línea, error):
             return f"Error de ejecución: {error}"
 
     return f"Error {tipo_error} en la línea {línea}: {error}"
-
-def compose_code(code):
-    s = ""
-    for line in code:
-        s = s + line + "\n"
-    return s
 
 #Se puede añadir un layout vertical aparte
 class MainWindow(QMainWindow):
@@ -133,14 +126,14 @@ class MainWindow(QMainWindow):
 
     def run_code(self):
         USAGE = "\n\nInstrucciones validas:\n\n* VARIABLE OPERACION\n\n* ETIQUETA:\n\n* IF VARIABLE != 0 GOTO ETIQUETA\n\n* CALL NOMBRE_MACRO\n\n* MACRO NOMBRE_MACRO ... END\n\nVARIABLE = Y, X1, Z1, X2, Z2, ...\nVARIABLE MACRO = T1, W1, T2, W2, ...\nOPERACION = ++, --, ==\nETIQUETA = A1, B1, C1, D1, S1, A2, ...\nETIQUETA MACRO = G1, G2, G3, ..."
-        equal_text = "MACRO COPIA","IF T2 != 0 GOTO G4","W1 ++","IF W1 != 0 GOTO G5","G4: T2 --","IF T2 != 0 GOTO G4","G5: IF T1 != 0 GOTO G2","W2 ++","IF W1 != 0 GOTO F","G2: T1 --","T2 ++","W3 ++","IF T1 != 0 GOTO G2","G3: W3 --","T1 ++","IF W3 != 0 GOTO G3","END"
-        suma_text = "MACRO SUMA","IF T3 != 0 GOTO G1","CALL SALTO G2","G1: T3 --","IF T3 != 0 GOTO G1","G2: CALL COPIA T2 W2","CALL COPIA T1 T3","IF T2 != 0 GOTO G3","CALL SALTO G4","G3: T3 ++","T2 --","IF T2 != 0 GOTO G3","G4: CALL COPIA W2 T2", "END"
-        goto_text = "MACRO SALTO", "W1 ++", "IF W1 != 0 GOTO T1", "END"
-        resta_text = "MACRO RESTA","CALL COPIA T1 T3","CALL COPIA T2 W1","IF T2 != 0 GOTO G1","CALL SALTO F","G1: W1 --","T3 --","IF W1 != 0 GOTO G1","END"
+        equal_text = ["MACRO COPIA","IF T2 != 0 GOTO G4","W1 ++","IF W1 != 0 GOTO G5","G4: T2 --","IF T2 != 0 GOTO G4","G5: IF T1 != 0 GOTO G2","W2 ++","IF W1 != 0 GOTO F","G2: T1 --","T2 ++","W3 ++","IF T1 != 0 GOTO G2","G3: W3 --","T1 ++","IF W3 != 0 GOTO G3","END"]
+        suma_text = ["MACRO SUMA","IF T3 != 0 GOTO G1","CALL SALTO G2","G1: T3 --","IF T3 != 0 GOTO G1","G2: CALL COPIA T2 W2","CALL COPIA T1 T3","IF T2 != 0 GOTO G3","CALL SALTO G4","G3: T3 ++","T2 --","IF T2 != 0 GOTO G3","G4: CALL COPIA W2 T2", "END"]
+        goto_text = ["MACRO SALTO", "W1 ++", "IF W1 != 0 GOTO T1", "END"]
+        resta_text = ["MACRO RESTA","CALL COPIA T1 T3","CALL COPIA T2 W1","IF T2 != 0 GOTO G1","CALL SALTO F","G1: W1 --","T3 --","IF W1 != 0 GOTO G1","END"]
         self.output_code.setPlainText("")
         QApplication.processEvents()
         text = self.code_text.toPlainText().splitlines()
-        check_str = ""
+        
 
         if self.equal_button:
             text = equal_text + text
@@ -163,32 +156,21 @@ class MainWindow(QMainWindow):
             text = funcs + resta_text + text
 
 
-        result = interpreter.interpreter(text)
-        if result[0] < 0:
-            self.output_code.setPlainText(error_msg(result[0], result[1], result[2]) + "\n" + USAGE)
+        varibales = core.analyse_variables(text)
+        if varibales[0] < 0:
+            self.output_code.setPlainText(error_msg(varibales[0], varibales[1], varibales[2]) + "\n" + USAGE)
         else:
             init_vars = {}
-            for arg in result[1]:
+            for arg in varibales[1]:
                 valor, _ = QInputDialog.getText(self, "Asignación de valores", f"Introduce el valor de la variable {arg}")
                 while valor.isnumeric() == False:
                     valor, _ = QInputDialog.getText(self, "Asignación de valores", f"Introduce el valor de la variable {arg}")
                 init_vars[arg] = int(valor)
-            code = expander.expander(text, result[4], result[5])
-            if code[0] < 0:
-                self.output_code.setPlainText(error_msg(code[0], code[1], code[2]))
-            else:
-                result = interpreter.interpreter(code[1])
-                if result[0] < 0:
-                    self.output_code.setPlainText("Después de la expansión: \n\n" + error_msg(result[0], result[1], result[2]) + "\nDe la expansión:\n\n" + compose_code(code[1]))
-                else:
-                    result = interpreter.execute(result[2], result[3], init_vars)
-                    if result[0] < 0:
-                        self.output_code.setPlainText(f"Para los valores de entrada {init_vars}\n" + error_msg(result[0], result[1], result[2]))
-                    else:
-                        if self.chk.isChecked():
-                            print("Encoder:")
-                            check_str = "Codificación:\n" + encoder.encoder(code[1]) + "\n"
-                        self.output_code.setPlainText(check_str + f"Para los valores de entrada {init_vars}\nResult: " + str(result[0]))
+
+            result = core.run(text, result[4], result[5])
+            self.output_code.setPlainText(result)
+
+            
 
 app = QApplication([])
 window = MainWindow()

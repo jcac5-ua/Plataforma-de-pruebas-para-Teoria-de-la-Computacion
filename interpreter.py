@@ -37,7 +37,7 @@ class Memory(object):
 
 def check_label(label):
 
-	if label[0] != 'A' and label[0] != 'B' and label[0] != 'C' and label[0] != 'D' and label[0] != 'E' and label[0] != 'S':
+	if label[0] != 'A' and label[0] != 'B' and label[0] != 'C' and label[0] != 'D' and label[0] != 'S':
 		return False
 	if label.endswith(':'):
 		label = label[1:-1]
