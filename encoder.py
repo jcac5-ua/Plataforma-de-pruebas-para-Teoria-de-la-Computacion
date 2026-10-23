@@ -93,7 +93,7 @@ def encoder(code):
 	pc = i + 1 if i != 0 else 0
 
 	for line in code[pc:]:
-		print(line)
+		#print(line)
 		if line == "" or line.startswith("#"):
 			continue
 		parts = line.split(" ")

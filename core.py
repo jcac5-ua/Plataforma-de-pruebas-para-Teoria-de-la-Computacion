@@ -28,7 +28,7 @@ def compose_code(code):
 def analyse_variables(text):
     return interpreter.interpreter(text)
 
-def run(text, lVars, lLabels, codification):
+def run(text, lVars, lLabels, init_vars, codification):
     check_str = ""
 	
     code = expander.expander(text, lVars, lLabels)

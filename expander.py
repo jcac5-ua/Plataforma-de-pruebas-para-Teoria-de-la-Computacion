@@ -3,7 +3,7 @@
 import interpreter
 
 def expander(code, lVars, lLabels):
-	print(f"listas iniciales Vars = {lVars} Etiquetas = {lLabels}")
+	#print(f"listas iniciales Vars = {lVars} Etiquetas = {lLabels}")
 	i = len(code) - 1
 	while i > 0 and code[i] != "END":
 		i = i -1
@@ -66,7 +66,7 @@ def translate_macro_line(line, args, lVars, lLabels, registro):
 	if line[0].startswith("#"):
 		return [1, line]
 		
-	print(registro)
+	#print(registro)
 	delimiter = " "
 	line = line.split(" ")
 

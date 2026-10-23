@@ -96,7 +96,7 @@ def interpreter(program_lines):
 	aux_used = []
 
 	for line in program_lines:
-		print(str(number_line) + ": '" + line + "'")
+		#print(str(number_line) + ": '" + line + "'")
 		parts = line.split(" ")
 		var = parts[0]
 		if line.startswith("#") or line == "":
@@ -227,7 +227,7 @@ def execute(program, label_tracker, init_vars):
 
 	mem_stack.append(mem)
 	while program[pc] != "HALT":
-		print(f"{pc}: {program[pc]}: {mem.get_vars()}")
+		#print(f"{pc}: {program[pc]}: {mem.get_vars()}")
 		mem = mem_stack[-1]
 		parts = program[pc].split(" ")
 		opcode = parts[0]
@@ -246,7 +246,7 @@ def execute(program, label_tracker, init_vars):
 			value = mem.get(var)
 			if check_macroArg_var(parts[2]):
 				tag = mem.get(parts[2])
-				print(tag)
+				#print(tag)
 			else:
 				tag = mem.get_name() + parts[2]
 			if value != 0:

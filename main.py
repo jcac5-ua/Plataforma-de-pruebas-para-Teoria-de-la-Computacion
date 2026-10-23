@@ -17,8 +17,6 @@ from PySide6.QtWidgets import (
     QToolBar,
 )
 from PySide6.QtCore import Qt, QSize
-
-
 import core
 
 #pyinstaller --name InterpreteL --windowed --onefile main.py
@@ -155,19 +153,20 @@ class MainWindow(QMainWindow):
                     funcs = funcs + goto_text
             text = funcs + resta_text + text
 
+        print(f"Text {text}")
 
-        varibales = core.analyse_variables(text)
-        if varibales[0] < 0:
-            self.output_code.setPlainText(error_msg(varibales[0], varibales[1], varibales[2]) + "\n" + USAGE)
+        variables = core.analyse_variables(text)
+        if variables[0] < 0:
+            self.output_code.setPlainText(error_msg(variables[0], variables[1], variables[2]) + "\n" + USAGE)
         else:
             init_vars = {}
-            for arg in varibales[1]:
+            for arg in variables[1]:
                 valor, _ = QInputDialog.getText(self, "Asignación de valores", f"Introduce el valor de la variable {arg}")
                 while valor.isnumeric() == False:
                     valor, _ = QInputDialog.getText(self, "Asignación de valores", f"Introduce el valor de la variable {arg}")
                 init_vars[arg] = int(valor)
 
-            result = core.run(text, result[4], result[5])
+            result = core.run(text, variables[4], variables[5], init_vars, self.chk.isChecked())
             self.output_code.setPlainText(result)
 
             
