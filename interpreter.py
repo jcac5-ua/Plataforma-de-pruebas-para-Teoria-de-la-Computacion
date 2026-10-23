@@ -168,6 +168,7 @@ def interpreter(program_lines):
 			nombre_macro = ""
 			main_start = number_line
 			in_macro = False
+			program.append("END")
 		##########################################################################################################
 		##############################		CALL MACRO								##############################
 		##########################################################################################################
@@ -220,7 +221,7 @@ def execute(program, label_tracker, init_vars):
 	for var in init_vars:
 		mem.set(var, init_vars.get(var))
 	i = len(program) - 1
-	while i > 0 and program[i] != "RET":
+	while i > 0 and program[i] != "END":
 		i = i -1
 	pc = i + 1 if i != 0 else 0
 	num_pasos = 0

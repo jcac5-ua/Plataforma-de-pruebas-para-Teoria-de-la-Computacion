@@ -153,8 +153,6 @@ class MainWindow(QMainWindow):
                     funcs = funcs + goto_text
             text = funcs + resta_text + text
 
-        print(f"Text {text}")
-
         variables = core.analyse_variables(text)
         if variables[0] < 0:
             self.output_code.setPlainText(error_msg(variables[0], variables[1], variables[2]) + "\n" + USAGE)

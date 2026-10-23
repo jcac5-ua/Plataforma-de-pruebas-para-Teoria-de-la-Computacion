@@ -31,19 +31,21 @@ def analyse_variables(text):
 def run(text, lVars, lLabels, init_vars, codification):
     check_str = ""
 	
-    code = expander.expander(text, lVars, lLabels)
-    if code[0] < 0:
-        return error_msg(code[0], code[1], code[2])
+    code_expanded = expander.expander(text, lVars, lLabels)
+    if code_expanded[0] < 0:
+        return error_msg(code_expanded[0], code_expanded[1], code_expanded[2])
     
-    result = interpreter.interpreter(code[1])
+    print(code_expanded[1])
+
+    result = interpreter.interpreter(code_expanded[1])
     if result[0] < 0:
-        return "Después de la expansión: \n\n" + error_msg(result[0], result[1], result[2]) + "\nDe la expansión:\n\n" + compose_code(code[1])
+        return "Después de la expansión: \n\n" + error_msg(result[0], result[1], result[2]) + "\nDe la expansión:\n\n" + compose_code(code_expanded[1])
     
     result = interpreter.execute(result[2], result[3], init_vars)
     if result[0] < 0:
         return f"Para los valores de entrada {init_vars}\n" + error_msg(result[0], result[1], result[2])
     
     if codification:
-        check_str = "Codificación:\n" + encoder.encoder(code[1]) + "\n"
+        check_str = "Codificación:\n" + encoder.encoder(code_expanded[1]) + "\n"
     
     return check_str + f"Para los valores de entrada {init_vars}\nResult: " + str(result[0])
