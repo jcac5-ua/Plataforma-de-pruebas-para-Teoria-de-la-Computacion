@@ -35,7 +35,7 @@ def run(text, lVars, lLabels, init_vars, codification):
     if code_expanded[0] < 0:
         return error_msg(code_expanded[0], code_expanded[1], code_expanded[2])
     
-    print(code_expanded[1])
+    #print(code_expanded[1])
 
     result = interpreter.interpreter(code_expanded[1])
     if result[0] < 0:
